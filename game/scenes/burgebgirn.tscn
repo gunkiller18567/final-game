@@ -1,0 +1,430 @@
+[gd_scene format=3 uid="uid://d4nak1wawepk3"]
+
+[ext_resource type="Texture2D" uid="uid://dpj302ft8t0aq" path="res://pictures/wit.png" id="1_r0acb"]
+[ext_resource type="Texture2D" uid="uid://d7qekngl1rjo" path="res://pictures/wic.png" id="1_wphne"]
+[ext_resource type="Texture2D" uid="uid://bcqpcuoyduogc" path="res://pictures/spritesheet (1).png" id="3_ejicv"]
+[ext_resource type="Texture2D" uid="uid://cteudugm2tdta" path="res://pictures/watf.png" id="3_xlqrn"]
+[ext_resource type="Texture2D" uid="uid://cwtbpvs6u6i2" path="res://pictures/deadmax.png" id="4_ejicv"]
+[ext_resource type="FontFile" uid="uid://ccgfbmphims21" path="res://ui/fonts/Raleway-VariableFont_wght.ttf" id="5_2q44g"]
+[ext_resource type="AudioStream" uid="uid://bvrh0ipies7or" path="res://musicnsounds/Record (online-voice-recorder.com) (3).mp3" id="6_jas46"]
+[ext_resource type="Texture2D" uid="uid://c0d86j8wc17a0" path="res://pictures/spritesheet (4).png" id="6_xlqrn"]
+[ext_resource type="AudioStream" uid="uid://51bnm1xjm7ro" path="res://musicnsounds/audiomass-output.mp3" id="9_ibt14"]
+
+[sub_resource type="GDScript" id="GDScript_0c6y7"]
+script/source = "extends CharacterBody2D
+
+@export var climbing = false
+@onready var timer: Timer = $AnimationPlayer/Timer
+@onready var asp = $AudioStreamPlayer
+@onready var asp2 = $AudioStreamPlayer2
+@onready var sprite = $alive
+@onready var animation = $AnimationPlayer
+
+
+var SPEED = 165.0
+var JUMP_VELOCITY = -330.0
+var gravity = 980
+var fall = 16
+var facing = \"r\"
+var dead = false
+var is_punching = false
+
+func _physics_process(delta: float) -> void:
+
+	if climbing == false:
+		gravity = 980
+
+	elif climbing == true:
+		velocity.y = 0
+		gravity = 0
+
+		if Input.is_action_pressed(\"up\"):
+			velocity.y = -SPEED
+
+		elif Input.is_action_pressed(\"crouch\"):
+			velocity.y = SPEED
+
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+		if not is_punching:
+			if velocity.y < 0:
+				animation.play(\"jump\")
+			if velocity.y > 0:
+				animation.stop()
+				animation.play(\"fall\")
+
+	if is_on_floor():
+		if velocity.y == 0 and not is_punching:
+			animation.play(\"idle\")
+
+		if Input.is_action_just_pressed(\"ko punch\") and not is_punching:
+			trigger_ko_punch()
+
+	if Input.is_anything_pressed() and not is_punching:
+		animation.stop()
+		timer.start(2.0)
+
+	if Input.is_action_just_pressed(\"jump\") and is_on_floor() and not is_punching:
+		velocity.y = JUMP_VELOCITY
+
+	var direction := Input.get_axis(\"left\", \"right\")
+
+	if direction and not is_punching:
+		velocity.x = direction * SPEED
+		if direction == -1.0 && dead == false:
+			facing = \"left\"
+		if direction == 1.0 && dead == false:
+			facing = \"right\"
+
+	if direction != 0 and not is_punching:
+		sprite.flip_h = direction < 0
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+
+	if Input.is_action_just_pressed(\"restart\"):
+		get_tree().reload_current_scene()
+
+	if is_on_floor() and not is_punching:
+		if direction == 1.0:
+			$CPUParticles2D.emitting = true
+			$CPUParticles2D.direction.x = -1
+		elif direction == -1.0:
+			$CPUParticles2D.emitting = true
+			$CPUParticles2D.direction.x = 1
+		else:
+			$CPUParticles2D.emitting = false
+	else:
+		$CPUParticles2D.emitting = false
+
+	move_and_slide()
+
+func _ready() -> void:
+	timer.start(2.0)
+
+func _on_timer_timeout() -> void:
+	if not is_punching:
+		print(\"pain\")
+		animation.play(\"idle\")
+
+func _on_trigger_area_entered(area: Area2D) -> void:
+	if area.get_collision_layer_value(4):
+		dead = true
+		if facing == \"right\":
+			$dead.modulate = Color(1, 1, 1, 1)
+		if facing == \"left\":
+			$dead2.modulate = Color(1, 1, 1, 1)
+		$alive.modulate = Color(1, 1, 1, 0)
+		$Label.modulate = Color(1, 1, 1, 1)
+		$wit.modulate = Color(1, 1, 1, 0)
+		$wic.modulate = Color(1, 1, 1, 0)
+		$CPUParticles2D.modulate = Color(1, 1, 1, 0)
+		SPEED = 0
+		JUMP_VELOCITY = 0
+		gravity = 980
+		velocity = Vector2(0, 0)
+		asp.play()
+
+func trigger_ko_punch() -> void:
+	is_punching = true
+
+	if facing == \"left\":
+		$kopunch.flip_h = true
+	else:
+		$kopunch.flip_h = false
+
+	animation.play(\"ko punch\")
+
+	asp2.play()
+
+	for trans in range(11):
+		$kopunch.modulate = Color(1, 1, 1, 1.0)
+		await get_tree().create_timer(0.001).timeout
+		if dead == true:
+			if facing == \"right\":
+				$dead.modulate = Color(1, 1, 1, 1)
+			if facing == \"left\":
+				$dead2.modulate = Color(1, 1, 1, 1)
+				$alive.modulate = Color(1, 1, 1, 0)
+				$Label.modulate = Color(1, 1, 1, 1)
+				$wit.modulate = Color(1, 1, 1, 0)
+				$wic.modulate = Color(1, 1, 1, 0)
+				$CPUParticles2D.modulate = Color(1, 1, 1, 0)
+
+	await get_tree().create_timer(1.5).timeout
+
+	for trans in range(11):
+		$kopunch.modulate = Color(1, 1, 1, (10 - trans) / 1.0)
+		await get_tree().create_timer(0.05).timeout
+
+	is_punching = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nxibs"]
+size = Vector2(15, 29)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xlqrn"]
+size = Vector2(15, 29)
+
+[sub_resource type="Animation" id="Animation_hrqgg"]
+length = 0.001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/alive:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharacterBody2D/alive:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 20)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CharacterBody2D/kopunch:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_rqe2n"]
+resource_name = "fall"
+length = 0.001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/alive:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharacterBody2D/alive:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8.000003)]
+}
+
+[sub_resource type="Animation" id="Animation_ibt14"]
+resource_name = "idle"
+length = 0.75
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/alive:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2500826, 0.5050688),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharacterBody2D/alive:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 19)]
+}
+
+[sub_resource type="Animation" id="Animation_xlqrn"]
+resource_name = "jump"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/alive:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+
+[sub_resource type="Animation" id="Animation_52gyw"]
+resource_name = "ko punch"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/kopunch:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rqe2n"]
+_data = {
+&"RESET": SubResource("Animation_hrqgg"),
+&"fall": SubResource("Animation_rqe2n"),
+&"idle": SubResource("Animation_ibt14"),
+&"jump": SubResource("Animation_xlqrn"),
+&"ko punch": SubResource("Animation_52gyw")
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_jas46"]
+font = ExtResource("5_2q44g")
+font_size = 10
+outline_size = 1
+
+[node name="Node2D" type="Node2D" unique_id=1772010675]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=168306918 groups=["climm"]]
+collision_layer = 255
+collision_mask = 255
+platform_on_leave = 1
+script = SubResource("GDScript_0c6y7")
+
+[node name="wit" type="Sprite2D" parent="CharacterBody2D" unique_id=1562720757]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(41, -39)
+scale = Vector2(0.204, 0.19)
+texture = ExtResource("1_r0acb")
+
+[node name="wic" type="Sprite2D" parent="CharacterBody2D" unique_id=1896502740]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(41, -39)
+scale = Vector2(0.20837262, 0.19743687)
+texture = ExtResource("1_wphne")
+
+[node name="watf" type="Sprite2D" parent="CharacterBody2D" unique_id=1272155202]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(40.6875, -39.0625)
+scale = Vector2(0.18087746, 0.17083332)
+texture = ExtResource("3_xlqrn")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=2068455139]
+zoom = Vector2(4, 4)
+position_smoothing_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=602676555]
+position = Vector2(0.5, 14.5)
+shape = SubResource("RectangleShape2D_nxibs")
+
+[node name="trigger" type="Area2D" parent="CharacterBody2D" unique_id=1955910295]
+collision_layer = 255
+collision_mask = 255
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/trigger" unique_id=856760286]
+position = Vector2(0.5, 14.5)
+shape = SubResource("RectangleShape2D_xlqrn")
+
+[node name="alive" type="Sprite2D" parent="CharacterBody2D" unique_id=525787971]
+position = Vector2(0, 20)
+scale = Vector2(0.07692308, 0.05253785)
+texture = ExtResource("3_ejicv")
+hframes = 5
+
+[node name="dead" type="Sprite2D" parent="CharacterBody2D" unique_id=712672470]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0.9999993, 13.000002)
+scale = Vector2(0.07890222, 0.05311618)
+texture = ExtResource("4_ejicv")
+
+[node name="dead2" type="Sprite2D" parent="CharacterBody2D" unique_id=381912237]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0.9999993, 13.000002)
+scale = Vector2(0.07890222, 0.05311618)
+texture = ExtResource("4_ejicv")
+flip_h = true
+
+[node name="kopunch" type="Sprite2D" parent="CharacterBody2D" unique_id=314962678]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(17.000002, -5.499998)
+scale = Vector2(0.14625852, 0.13549618)
+texture = ExtResource("6_xlqrn")
+hframes = 20
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D" unique_id=1510186767]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_rqe2n")
+speed_scale = 1.605
+
+[node name="Timer" type="Timer" parent="CharacterBody2D/AnimationPlayer" unique_id=1441682418]
+wait_time = 2.0
+one_shot = true
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="CharacterBody2D" unique_id=42951754]
+position = Vector2(0, 29)
+emitting = false
+amount = 15
+lifetime = 0.21
+emission_shape = 3
+emission_rect_extents = Vector2(10, 0)
+direction = Vector2(1, -0.25)
+spread = 13.06
+gravity = Vector2(0, 0)
+initial_velocity_max = 128.57
+scale_amount_min = 0.0
+color = Color(0.26657522, 0.2665752, 0.2665752, 1)
+
+[node name="Label" type="Label" parent="CharacterBody2D" unique_id=965549293]
+modulate = Color(1, 1, 1, 0)
+light_mask = 9
+visibility_layer = 9
+offset_left = -34.0
+offset_top = -65.0
+offset_right = 34.0
+offset_bottom = -42.0
+text = "you have died
+press r to restart"
+label_settings = SubResource("LabelSettings_jas46")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CharacterBody2D" unique_id=2020698069]
+stream = ExtResource("6_jas46")
+volume_db = 24.0
+pitch_scale = 1.56
+bus = &"sound effects"
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="CharacterBody2D" unique_id=1158074877]
+stream = ExtResource("9_ibt14")
+volume_db = 24.0
+pitch_scale = 1.06
+bus = &"sound effects"
+
+[connection signal="area_entered" from="CharacterBody2D/trigger" to="CharacterBody2D" method="_on_trigger_area_entered"]
+[connection signal="timeout" from="CharacterBody2D/AnimationPlayer/Timer" to="CharacterBody2D" method="_on_timer_timeout"]

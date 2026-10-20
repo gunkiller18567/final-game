@@ -1,0 +1,337 @@
+[gd_scene format=3 uid="uid://co8o7o846xpjo"]
+
+[ext_resource type="Script" uid="uid://b3cl0sglpccyy" path="res://ui/scripts/ui_1.gd" id="1_7jqo7"]
+[ext_resource type="Texture2D" uid="uid://dtt1wlfddhsdi" path="res://ui/pictures/bg.png" id="2_654j3"]
+[ext_resource type="FontFile" uid="uid://ccgfbmphims21" path="res://ui/fonts/Raleway-VariableFont_wght.ttf" id="3_b7lyq"]
+[ext_resource type="Script" uid="uid://s65crn5qjc2u" path="res://ui/scripts/label.gd" id="4_xwhhn"]
+[ext_resource type="FontFile" uid="uid://clvb3agge1h0e" path="res://ui/fonts/PlaywriteNZBasicGuides-Regular.ttf" id="5_e43c4"]
+[ext_resource type="AudioStream" uid="uid://bsrwxtvbld8yb" path="res://musicnsounds/5308330423222272.wav" id="6_2qa61"]
+[ext_resource type="Texture2D" uid="uid://b1mu15w3prlaf" path="res://ui/pictures/uibackground(2).png" id="7_8q3qs"]
+[ext_resource type="Texture2D" uid="uid://bjpx4nnc20swm" path="res://pictures/download.png" id="8_lfxey"]
+[ext_resource type="Texture2D" uid="uid://jbain0pomfpw" path="res://ui/sliders/slider_buttonpressed.png" id="9_7tr2s"]
+[ext_resource type="Texture2D" uid="uid://dsgn4kkyjub0p" path="res://ui/sliders/slider_button.png" id="10_4ii0y"]
+[ext_resource type="Script" uid="uid://cs7o4s13658pv" path="res://ui/scripts/audiocontrol.gd" id="11_6gp8y"]
+[ext_resource type="Script" uid="uid://drb711wqw3xv2" path="res://ui/scripts/fullscreencontrol.gd" id="12_pvd0d"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cxnh2"]
+texture = ExtResource("2_654j3")
+
+[sub_resource type="LabelSettings" id="LabelSettings_svs77"]
+font = ExtResource("3_b7lyq")
+font_size = 50
+outline_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r8noq"]
+bg_color = Color(0, 0, 0, 1)
+border_width_right = 10
+border_width_bottom = 3
+border_color = Color(0.4296696, 0.44319528, 0.47489226, 1)
+border_blend = true
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bo4gc"]
+bg_color = Color(0.26293266, 0.2629324, 0.26293245, 1)
+border_width_right = 10
+border_width_bottom = 3
+border_color = Color(0.13682574, 0.13682577, 0.13682562, 1)
+border_blend = true
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0.16862746, 0.16862746, 0.16862746, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxwf1"]
+bg_color = Color(0.10747974, 0.10747974, 0.10747967, 1)
+border_width_right = 10
+border_width_bottom = 3
+border_color = Color(0.3553137, 0.35531354, 0.35531357, 1)
+border_blend = true
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0.16862746, 0.16862746, 0.16862746, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ktfwq"]
+texture = ExtResource("7_8q3qs")
+
+[sub_resource type="LabelSettings" id="LabelSettings_cxnh2"]
+font = ExtResource("3_b7lyq")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+outline_size = 5
+outline_color = Color(0, 0.48102868, 4.813075e-07, 1)
+shadow_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_gwtir"]
+font = ExtResource("3_b7lyq")
+font_size = 18
+font_color = Color(0, 0, 0, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ltxer"]
+font = ExtResource("3_b7lyq")
+font_size = 18
+font_color = Color(0, 0, 0, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_30s1o"]
+font = ExtResource("3_b7lyq")
+font_color = Color(0, 0, 0, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ktfwq"]
+color = Color(0, 0.56078434, 1, 1)
+thickness = 8
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_gwtir"]
+color = Color(0, 0.6769788, 0.75996536, 1)
+thickness = 8
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ltxer"]
+color = Color(0.19202134, 0.8998351, 1, 1)
+
+[node name="Control" type="Control" unique_id=1472472154]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_top = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7jqo7")
+
+[node name="background" type="Panel" parent="." unique_id=1332333734]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_cxnh2")
+
+[node name="Label" type="Label" parent="." unique_id=1150744131]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -224.0
+offset_top = 72.0
+offset_right = 247.0
+offset_bottom = 155.0
+grow_horizontal = 2
+text = "CLIMBING GAME"
+label_settings = SubResource("LabelSettings_svs77")
+script = ExtResource("4_xwhhn")
+
+[node name="thebuttons" type="VBoxContainer" parent="." unique_id=1923587336]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -31.0
+offset_right = 96.0
+offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 13
+
+[node name="start" type="Button" parent="thebuttons" unique_id=288623056]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_e43c4")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_r8noq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bo4gc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kxwf1")
+text = "start"
+
+[node name="help" type="Button" parent="thebuttons" unique_id=2065448983]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_e43c4")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_r8noq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bo4gc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kxwf1")
+text = "help"
+
+[node name="quit" type="Button" parent="thebuttons" unique_id=237634522]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_e43c4")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_r8noq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bo4gc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kxwf1")
+text = "quit
+"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=843684164]
+stream = ExtResource("6_2qa61")
+autoplay = true
+bus = &"music"
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1010966735]
+layout_mode = 0
+offset_left = -53.0
+offset_top = -87.0
+offset_right = 1247.0
+offset_bottom = 728.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="helpmenu" type="Panel" parent="." unique_id=363649967]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -510.0
+offset_top = -195.0
+offset_right = 544.0
+offset_bottom = 291.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ktfwq")
+
+[node name="Label" type="Label" parent="helpmenu" unique_id=1392820380]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 81.0
+offset_bottom = 164.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "the help"
+label_settings = SubResource("LabelSettings_cxnh2")
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="helpmenu" unique_id=625480582]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 72.5
+offset_top = -83.125
+offset_right = 222.5
+offset_bottom = 75.875
+grow_vertical = 2
+text = "controls
+-----------------
+A - left
+D - right
+S - crouch
+Spacebar - jump
+R - restart"
+label_settings = SubResource("LabelSettings_gwtir")
+
+[node name="Label3" type="Label" parent="helpmenu" unique_id=462605537]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -831.0
+offset_top = -81.0
+offset_right = -667.0
+offset_bottom = 66.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "basically just
+climb the
+tower
+without dying
+pls and if you die
+you restart 😁😁👍"
+label_settings = SubResource("LabelSettings_ltxer")
+
+[node name="Label4" type="Label" parent="helpmenu" unique_id=1975312438]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 141.0
+offset_right = 887.0
+offset_bottom = 164.0
+text = "volume"
+label_settings = SubResource("LabelSettings_30s1o")
+horizontal_alignment = 1
+
+[node name="back" type="Button" parent="helpmenu" unique_id=213777756]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 345.0
+offset_right = 285.5
+offset_bottom = 414.0
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_b7lyq")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_r8noq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bo4gc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kxwf1")
+text = "back
+"
+icon = ExtResource("8_lfxey")
+expand_icon = true
+
+[node name="audiocontrol" type="HSlider" parent="helpmenu" unique_id=1604742746]
+layout_mode = 0
+offset_left = 715.0
+offset_top = 170.0
+offset_right = 937.0
+offset_bottom = 222.0
+theme_override_icons/grabber = ExtResource("9_7tr2s")
+theme_override_icons/grabber_highlight = ExtResource("10_4ii0y")
+theme_override_styles/slider = SubResource("StyleBoxLine_ktfwq")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_gwtir")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_ltxer")
+max_value = 1.0
+step = 0.05
+value = 1.0
+script = ExtResource("11_6gp8y")
+audio_bus_name = "music"
+
+[node name="fullscreencontrol" type="CheckButton" parent="helpmenu" unique_id=420459210]
+layout_mode = 0
+offset_left = 741.0
+offset_top = 280.0
+offset_right = 943.0
+offset_bottom = 304.0
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_b7lyq")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_r8noq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bo4gc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kxwf1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_bo4gc")
+theme_override_icons/checked = ExtResource("9_7tr2s")
+theme_override_icons/unchecked = ExtResource("10_4ii0y")
+text = "fullscreen"
+alignment = 1
+script = ExtResource("12_pvd0d")
+
+[connection signal="pressed" from="thebuttons/start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="thebuttons/help" to="." method="_on_help_pressed"]
+[connection signal="pressed" from="thebuttons/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="helpmenu/back" to="." method="_on_back_options_pressed"]
+[connection signal="value_changed" from="helpmenu/audiocontrol" to="helpmenu/audiocontrol" method="_on_value_changed"]
+[connection signal="toggled" from="helpmenu/fullscreencontrol" to="helpmenu/fullscreencontrol" method="_on_toggled"]

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c1g7w6dbjlnf6"]
+
+[ext_resource type="Script" uid="uid://b7nlyvj746war" path="res://game/scripts/trussscript.gd" id="1_qcumi"]
+[ext_resource type="Texture2D" uid="uid://dxexx2nleiorm" path="res://pictures/truss.png" id="2_gqtja"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cwxan"]
+size = Vector2(14, 47)
+
+[node name="Area2D" type="Area2D" unique_id=454838092]
+script = ExtResource("1_qcumi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2030223134]
+position = Vector2(5.203676, 0.5)
+shape = SubResource("RectangleShape2D_cwxan")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1289543532]
+position = Vector2(5.203676, 0.7352333)
+scale = Vector2(0.08474914, 0.124594405)
+texture = ExtResource("2_gqtja")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

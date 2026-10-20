@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bml4rrcqvh6ra"]
+
+[ext_resource type="Texture2D" uid="uid://dxexx2nleiorm" path="res://pictures/truss.png" id="1_g5c4x"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oxwbl"]
+size = Vector2(14, 48)
+
+[node name="truss\\" type="Node2D"]
+
+[node name="trussact" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="trussact"]
+shape = SubResource("RectangleShape2D_oxwbl")
+
+[node name="Sprite2D" type="Sprite2D" parent="trussact"]
+scale = Vector2(0.08474914, 0.124594405)
+texture = ExtResource("1_g5c4x")

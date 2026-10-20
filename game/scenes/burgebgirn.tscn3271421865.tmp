@@ -1,0 +1,248 @@
+[gd_scene load_steps=15 format=3 uid="uid://d4nak1wawepk3"]
+
+[ext_resource type="Texture2D" uid="uid://dpj302ft8t0aq" path="res://pictures/wit.png" id="1_r0acb"]
+[ext_resource type="Texture2D" uid="uid://d7qekngl1rjo" path="res://pictures/wic.png" id="1_wphne"]
+[ext_resource type="Texture2D" uid="uid://nbqda4k4nm6c" path="res://pictures/spritesheet.png" id="3_ejicv"]
+[ext_resource type="Texture2D" uid="uid://cwtbpvs6u6i2" path="res://pictures/deadmax.png" id="4_ejicv"]
+[ext_resource type="FontFile" uid="uid://ccgfbmphims21" path="res://ui/fonts/Raleway-VariableFont_wght.ttf" id="5_2q44g"]
+[ext_resource type="Script" uid="uid://c8o5sgtye7e7f" path="res://game/scenes/animation_player.gd" id="5_ejicv"]
+[ext_resource type="AudioStream" uid="uid://bac723fovlvs" path="res://musicnsounds/Record (online-voice-recorder.com).mp3" id="6_jas46"]
+
+[sub_resource type="GDScript" id="GDScript_0c6y7"]
+script/source = "extends CharacterBody2D
+
+@export var climbing = false
+
+var SPEED = 165.0
+var JUMP_VELOCITY = -330.0
+var gravity = 980
+var fall = 16
+
+@onready var asp = $AudioStreamPlayer
+@onready var sprite = $alive
+
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if climbing == false:
+		gravity = 980
+	elif climbing == true:
+		velocity.y = 0
+		gravity = 0
+		if Input.is_action_pressed(\"up\"):
+			velocity.y = -SPEED
+		elif Input.is_action_pressed(\"crouch\"):
+			velocity.y = SPEED
+	if not is_on_floor():
+		velocity.y += gravity * delta
+	
+	# Handle jump.
+	if Input.is_action_just_pressed(\"jump\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var direction := Input.get_axis(\"left\", \"right\")
+	
+	
+	
+	if direction:
+		print(direction)
+		velocity.x = direction * SPEED
+	if direction != 0:
+		sprite.flip_h = direction < 0
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+	
+	if Input.is_action_just_pressed(\"restart\"):
+		get_tree().reload_current_scene()
+	
+	
+	if is_on_floor():
+		if direction == 1.0:
+			$CPUParticles2D.emitting = true
+			$CPUParticles2D.direction.x = -1
+		
+		elif direction == -1.0:
+			$CPUParticles2D.emitting = true
+			$CPUParticles2D.direction.x = 1
+		
+		else:
+			$CPUParticles2D.emitting = false
+	else:
+		$CPUParticles2D.emitting = false
+	
+	
+	
+	move_and_slide()
+
+
+func _on_trigger_area_entered(area: Area2D) -> void:
+	if area.get_collision_layer_value(4):
+		if right:
+			$dead.modulate = Color(1, 1, 1, 1)
+		if left:
+			$dead.modulate = Color(1, 1, 1, 0)
+			$dead2.modulate = Color(1, 1, 1, 1)
+		$alive.modulate = Color(1, 1, 1, 0)
+		$dead.modulate = Color(1, 1, 1, 1)
+		$Label.modulate = Color(1, 1, 1, 1)
+		$wit.modulate = Color(1, 1, 1, 0)
+		$wic.modulate = Color(1, 1, 1, 0)
+		$CPUParticles2D.modulate = Color(1, 1, 1, 0)
+		SPEED = 0
+		JUMP_VELOCITY = 0
+		gravity = 980
+		velocity = Vector2(0, 0)
+		asp.play()
+		
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nxibs"]
+size = Vector2(15, 29)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xlqrn"]
+size = Vector2(15, 29)
+
+[sub_resource type="Animation" id="Animation_hrqgg"]
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/alive:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.93333334, 1.4, 1.9, 2.4, 2.9666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 1, 0, 1, 0]
+}
+
+[sub_resource type="Animation" id="Animation_ibt14"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharacterBody2D/alive:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2500826, 0.5050688, 0.75760317, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rqe2n"]
+_data = {
+&"RESET": SubResource("Animation_hrqgg"),
+&"idle": SubResource("Animation_ibt14")
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_jas46"]
+font = ExtResource("5_2q44g")
+font_size = 10
+outline_size = 1
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." groups=["climm"]]
+collision_layer = 255
+collision_mask = 255
+platform_on_leave = 1
+script = SubResource("GDScript_0c6y7")
+climbing = null
+
+[node name="wit" type="Sprite2D" parent="CharacterBody2D"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(41, -39)
+scale = Vector2(0.204, 0.19)
+texture = ExtResource("1_r0acb")
+
+[node name="wic" type="Sprite2D" parent="CharacterBody2D"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(41, -39)
+scale = Vector2(0.20837262, 0.19743687)
+texture = ExtResource("1_wphne")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+zoom = Vector2(4, 4)
+position_smoothing_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(0.5, 14.5)
+shape = SubResource("RectangleShape2D_nxibs")
+
+[node name="trigger" type="Area2D" parent="CharacterBody2D"]
+collision_layer = 255
+collision_mask = 255
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/trigger"]
+position = Vector2(0.5, 14.5)
+shape = SubResource("RectangleShape2D_xlqrn")
+
+[node name="alive" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(0.4999997, 13)
+scale = Vector2(0.07692308, 0.052689347)
+texture = ExtResource("3_ejicv")
+hframes = 3
+
+[node name="dead" type="Sprite2D" parent="CharacterBody2D"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0.9999993, 13.000002)
+scale = Vector2(0.07890222, 0.05311618)
+texture = ExtResource("4_ejicv")
+
+[node name="dead2" type="Sprite2D" parent="CharacterBody2D"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0.9999993, 13.000002)
+scale = Vector2(0.07890222, 0.05311618)
+texture = ExtResource("4_ejicv")
+flip_h = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_rqe2n")
+}
+script = ExtResource("5_ejicv")
+
+[node name="Timer" type="Timer" parent="CharacterBody2D/AnimationPlayer"]
+wait_time = 2.0
+one_shot = true
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="CharacterBody2D"]
+position = Vector2(0, 29)
+emitting = false
+amount = 15
+lifetime = 0.21
+emission_shape = 3
+emission_rect_extents = Vector2(10, 0)
+direction = Vector2(1, -0.25)
+spread = 13.06
+gravity = Vector2(0, 0)
+initial_velocity_max = 128.57
+scale_amount_min = 0.0
+color = Color(0.26657522, 0.2665752, 0.2665752, 1)
+
+[node name="Label" type="Label" parent="CharacterBody2D"]
+modulate = Color(1, 1, 1, 0)
+light_mask = 9
+visibility_layer = 9
+offset_left = -34.0
+offset_top = -65.0
+offset_right = 34.0
+offset_bottom = -42.0
+text = "you have died
+press r to restart"
+label_settings = SubResource("LabelSettings_jas46")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CharacterBody2D"]
+stream = ExtResource("6_jas46")
+volume_db = 7.81
+pitch_scale = 2.0
+
+[connection signal="area_entered" from="CharacterBody2D/trigger" to="CharacterBody2D" method="_on_trigger_area_entered"]
+[connection signal="timeout" from="CharacterBody2D/AnimationPlayer/Timer" to="CharacterBody2D/AnimationPlayer" method="_on_timer_timeout"]

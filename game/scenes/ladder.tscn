@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://xv8uj13euy63"]
+
+[ext_resource type="Texture2D" uid="uid://c61bk2hgyb56l" path="res://pictures/ladder_fin.png" id="1_cq4ai"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cq4ai"]
+size = Vector2(20, 15.000023)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lqhsa"]
+size = Vector2(20, 17.000042)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qe38t"]
+size = Vector2(20, 20.000042)
+
+[node name="ladder" type="Node2D"]
+
+[node name="overall_ladder" type="StaticBody2D" parent="."]
+rotation = 2.1419039e-05
+
+[node name="Sprite2D" type="Sprite2D" parent="overall_ladder"]
+position = Vector2(-0.34591496, 0.22017121)
+scale = Vector2(0.19103728, 0.32929182)
+texture = ExtResource("1_cq4ai")
+
+[node name="step1" type="CollisionShape2D" parent="overall_ladder"]
+position = Vector2(0.0006639902, 31)
+shape = SubResource("RectangleShape2D_cq4ai")
+one_way_collision = true
+
+[node name="step2" type="CollisionShape2D" parent="overall_ladder"]
+position = Vector2(0.99997854, -1.0000215)
+shape = SubResource("RectangleShape2D_lqhsa")
+one_way_collision = true
+
+[node name="step3" type="CollisionShape2D" parent="overall_ladder"]
+position = Vector2(0.9993788, -29.000021)
+shape = SubResource("RectangleShape2D_qe38t")
+one_way_collision = true

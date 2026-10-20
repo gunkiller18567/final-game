@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://c4a2s3300s3ju"]
+
+[ext_resource type="Script" uid="uid://b5kaljh0xts36" path="res://game/scripts/win_screen.gd" id="1_5uay6"]
+[ext_resource type="Texture2D" uid="uid://doo5yajkjtnel" path="res://pictures/win.png" id="2_tkis4"]
+[ext_resource type="FontFile" uid="uid://clvb3agge1h0e" path="res://ui/fonts/PlaywriteNZBasicGuides-Regular.ttf" id="3_162n3"]
+[ext_resource type="AudioStream" uid="uid://by7cur1mfdbu4" path="res://musicnsounds/5525550600421376.wav" id="4_nrp37"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l5t5q"]
+bg_color = Color(0, 0, 0, 1)
+border_width_right = 10
+border_width_bottom = 3
+border_color = Color(0.4296696, 0.44319528, 0.47489226, 1)
+border_blend = true
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0.16924527, 0.1692453, 0.16924527, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1txte"]
+bg_color = Color(0.26293266, 0.2629324, 0.26293245, 1)
+border_width_right = 10
+border_width_bottom = 3
+border_color = Color(0.13682574, 0.13682577, 0.13682562, 1)
+border_blend = true
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0.16862746, 0.16862746, 0.16862746, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_26557"]
+bg_color = Color(0.10747974, 0.10747974, 0.10747967, 1)
+border_width_right = 10
+border_width_bottom = 3
+border_color = Color(0.3553137, 0.35531354, 0.35531357, 1)
+border_blend = true
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0.16862746, 0.16862746, 0.16862746, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[node name="winscreen" type="Node2D" unique_id=1155645628]
+script = ExtResource("1_5uay6")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1238350649]
+texture = ExtResource("2_tkis4")
+
+[node name="quit" type="Button" parent="." unique_id=273186979]
+offset_left = 453.0
+offset_top = 221.0
+offset_right = 537.0
+offset_bottom = 290.0
+theme_override_fonts/font = ExtResource("3_162n3")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_l5t5q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1txte")
+theme_override_styles/hover = SubResource("StyleBoxFlat_26557")
+text = "quit
+"
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=914882487]
+visible = false
+offset_left = -581.0
+offset_top = -324.0
+offset_right = 573.0
+offset_bottom = 324.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1860563135]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=377026192]
+stream = ExtResource("4_nrp37")
+autoplay = true
+bus = &"music"
+playback_type = 1
+
+[connection signal="pressed" from="quit" to="." method="_on_quit_pressed"]
